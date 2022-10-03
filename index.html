@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./dark.css">
+    <title>Stable Horde Workers</title>
+</head>
+<body>
+    <div id="sidebar">
+        <div id="signIn"><h1>Enter User ID:<div style="font-size:15px; margin-bottom: 10px">eg. 248 for aqualxx#248</div> </h1><input type="text" class="input" id="uid"><button id="submitUid">Submit</button></div>
+        <div id="sidebarInfo"></div><br><br>
+        <table id="leaderboard" style="display: none;">
+            <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>Kudos</th>
+            </tr>
+            <tr>
+                <td>Loading...</td>
+                <td>Loading...</th>
+                <td>Loading...</td>
+            </tr>
+        </table>
+    </div>
+    <div id="header">
+        <a class="link" href="https://stablehorde.net/">stable horde</a>
+        <span>|</span>
+        <div class="link" onclick="openOptions()">options</div>
+        <span>|</span>
+        <a class="link" href="https://github.com/aqualxx">github</a>
+    </div>
+    <div class="container-container">
+        <div class="flex-container" id="content">
+            <div>Loading...</div>
+        </div>
+    </div>
+    <div class="modal-container" id="options">
+        <div class="modal">
+            <div class="modal-content">
+                <div class="close-modal" onclick="closeOptions()"><svg style="width: 1.5em; height:1.5em;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"><path d="M289.94 256l95-95A24 24 0 0 0 351 127l-95 95l-95-95a24 24 0 0 0-34 34l95 95l-95 95a24 24 0 1 0 34 34l95-95l95 95a24 24 0 0 0 34-34z" fill="#909090"></path></svg></div>
+                <h1 style="margin: 0">Options</h1>
+                <ul>
+                    <li>Light Mode: <input type="checkbox" name="lightmode" id="lightmode"></li>
+                    <li>Leaderboard: <input type="checkbox" name="leaderboardOption" id="leaderboardOption"><br><i style="font-size:16px;">(leaderboard may take time to load due to rate limiting)</i></li>
+                    <li>User ID: <input type="text" class="input" name="uidAlt" id="uidAlt"><button id="submitUidAlt">Submit</button></li>
+                </ul>
+                <div class="thanks">Created by aqualxx#5004 and the Stable Horde community!</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./index.js"></script>
+</html>

@@ -1,0 +1,167 @@
+body {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin: 0;
+    font-size: 18px;
+    overflow-y: hidden;
+
+    transition: 0.2s background-color ease-in-out;
+}
+
+html, body {
+    height: 100vh;
+}
+
+.container-container {
+    overflow-y: auto;
+    height: calc(100% - 50px);
+    width: 80%;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+}
+
+.flex-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.flex-container > div {
+    padding: 20px;
+    width: calc(100%/3 - 40px);
+}
+
+#sidebar {
+    left: 0;
+    position: absolute;
+    height: 100%;
+    width: calc(20% - 20px);
+    padding: 0 10px;
+
+    transition: 0.2s background-color ease-in-out;
+}
+
+#header {
+    right: 0;
+    position: absolute;
+    height: 45px;
+    /* 20px for padding, 1px for sidebar border */
+    width: calc(80% - 21px);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 10px;
+
+    transition: 0.2s background-color ease-in-out;
+}
+
+.input {
+    width: 100px;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.modal-container {
+    width: 100%;
+    height: 100%;
+    display: none;
+
+    transition: 0.2s background-color ease-in-out;
+}
+
+.modal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal-content {
+    width: 50vw;
+    height: 40vh;
+    padding: 10px;
+
+    transition: 0.2s background-color ease-in-out;
+}
+
+.close-modal {
+    float: right;
+}
+
+.close-modal:hover {
+    cursor: pointer;
+}
+
+#leaderboard {
+    width: 100%;
+}
+
+.thanks {
+    font-size: 12px;
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+}
+
+@media only screen and (max-width: 1280px) {
+    .flex-container > div {
+        width: calc(100%/2 - 40px);
+        font-size: 16px;
+    }
+
+    .container-container {
+        width: 70% !important;
+    }
+
+    #header {
+        width: calc(70% - 21px) !important;
+    }
+
+    #sidebar {
+        width: calc(30% - 20px) !important;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+}
+
+@media only screen and (max-width: 850px) {
+    .flex-container > div {
+        width: calc(100% - 40px);
+    }
+
+    .container-container {
+        width: 60% !important;
+    }
+
+    #header {
+        width: calc(60% - 21px) !important;
+    }
+
+    #sidebar {
+        width: calc(40% - 20px) !important;
+    }
+
+    h1 {
+        font-size: 1.25em;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    #leaderboard {
+        padding: 10px;
+        font-size: 17px;
+    }
+}

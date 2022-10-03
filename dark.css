@@ -1,0 +1,27 @@
+body {
+    background-color: rgba(0, 0, 0, 0.86);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#sidebar {
+    background-color: rgb(24, 24, 24);
+    border-right: 1px solid rgb(144, 144, 144);
+}
+
+#header {
+    background-color: rgb(24, 24, 24);
+    border-bottom: 1px solid rgb(144, 144, 144);
+}
+
+.link {
+    color: rgb(173, 173, 173);
+}
+
+.modal-container {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: rgba(25,25,25);
+    border: solid 2px rgb(144, 144, 144);
+}
