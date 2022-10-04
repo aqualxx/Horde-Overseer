@@ -45,6 +45,14 @@
                 <ul>
                     <li>Light Mode: <input type="checkbox" name="lightmode" id="lightmode"></li>
                     <li>Leaderboard: <input type="checkbox" name="leaderboardOption" id="leaderboardOption"><br><i style="font-size:16px;">(leaderboard may take time to load due to rate limiting)</i></li>
+                    <li>Sort Workers By: <select name="sortWorkers" id="sortWorkers">
+                        <option value="none">None</option>
+                        <option value="time">Uptime</option>
+                        <option value="kudos">Kudos</option>
+                        <option value="reqfilled">Requests Fulfilled</option>
+                        <option value="totalmps">Total MPS</option>
+                        <option value="maxsize">Max Size</option>
+                    </select></li>
                     <li>User ID: <input type="text" class="input" name="uidAlt" id="uidAlt"><button id="submitUidAlt">Submit</button></li>
                 </ul>
                 <div class="thanks">Created by aqualxx#5004 and the Stable Horde community!</div>

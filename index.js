@@ -1,33 +1,48 @@
+// Main Body Elements
 const content = document.getElementById("content");
+
+// Sidebar Elements
 const uid = document.getElementById("uid");
-const uidAlt = document.getElementById("uidAlt");
 const submitUID = document.getElementById("submitUid");
-const submitUIDAlt = document.getElementById("submitUidAlt");
 const sidebar = document.getElementById("sidebar");
 const sidebarInfo = document.getElementById("sidebarInfo");
 const signIn = document.getElementById("signIn");
 const leaderboard = document.getElementById("leaderboard");
 
-let userID = localStorage.getItem('userID') || -1;
-let lightMode = (localStorage.getItem('lightMode') === 'true') || false;
-let leaderboardEnabled = (localStorage.getItem('leaderboardEnabled') === 'true') || true;
+// Option Elements
+const uidAlt = document.getElementById("uidAlt");
+const submitUIDAlt = document.getElementById("submitUidAlt");
+const leaderboardOption = document.getElementById("leaderboardOption");
+const lightModeOption = document.getElementById("lightmode");
+const sortWorkersOption = document.getElementById("sortWorkers");
 
-if (userID != -1) {
+let cachedWorkers = [];
+
+let options = {
+    userID: localStorage.getItem('userID') || -1,
+    lightMode: (localStorage.getItem('lightMode') === 'true') || false,
+    leaderboardEnabled: (localStorage.getItem('leaderboardEnabled') === 'true') || true,
+    sortWorkers: localStorage.getItem('sortWorkers') || 'none'
+};
+
+if (options.userID != -1) {
     signIn.style.display = "none";
     sidebarInfo.innerHTML = "<h1>Loading...</h1>";
-    uidAlt.value = userID;
+    uidAlt.value = options.userID;
 }
 
-if (leaderboardEnabled) {
-    document.getElementById("leaderboardOption").checked = true;
-    document.querySelector("#leaderboard").style.display = "table";
-}
-
-if (lightMode) {
-    document.getElementById("lightmode").checked = true;
+if (options.lightMode) {
+    lightModeOption.checked = true;
     document.querySelector("link[href='./dark.css']").href = './light.css';
     document.querySelector(".close-modal>svg>path").setAttribute("fill", "rgb(111, 111, 111)");
 }
+
+if (options.leaderboardEnabled) {
+    leaderboardOption.checked = true;
+    leaderboard.style.display = "table";
+}
+
+sortWorkersOption.value = options.sortWorkers;
 
 function secondsToDhm(seconds) {
     seconds = Number(seconds);
@@ -46,9 +61,9 @@ submitUID.addEventListener("click", async () => {
     const response = await fetch("https://stablehorde.net/api/v2/users/" + uid.value);
     if (!response.ok) return;
 
-    userID = uid.value;
+    options.userID = uid.value;
     uidAlt.value = uid.value;
-    localStorage.setItem("userID", userID);
+    localStorage.setItem("userID", options.userID);
     signIn.style.display = "none";
     updateSidebarInfo();
 })
@@ -57,16 +72,16 @@ submitUIDAlt.addEventListener("click", async () => {
     const response = await fetch("https://stablehorde.net/api/v2/users/" + uidAlt.value);
     if (!response.ok) return;
 
-    userID = uidAlt.value;
-    localStorage.setItem("userID", userID);
+    options.userID = uidAlt.value;
+    localStorage.setItem("userID", options.userID);
     signIn.style.display = "none";
     updateSidebarInfo();
 })
 
 async function updateSidebarInfo() {
-    if (userID === -1) return;
+    if (options.userID === -1) return;
 
-    let response = await fetch("https://stablehorde.net/api/v2/users/" + userID);
+    let response = await fetch("https://stablehorde.net/api/v2/users/" + options.userID);
     if (!response.ok) return;
     let user = await response.json();
 
@@ -86,7 +101,7 @@ async function updateSidebarInfo() {
 
 // Can only call once per 30s
 async function updateLeaderboard() {
-    if (!leaderboardEnabled) return;
+    if (!options.leaderboardEnabled) return;
     let response = await fetch("https://stablehorde.net/api/v2/users");
     if (!response.ok) return;
     let users = await response.json();
@@ -111,11 +126,36 @@ async function updateLeaderboard() {
     }
 }
 
-async function updateWorkers() {
-    const response = await fetch("https://stablehorde.net/api/v2/workers");
-    if (!response.ok) return;
-    let workers = await response.json();
+// Does not work with functions, classes, undefined, Infinity, RegExps, Maps, Sets
+function deepClone(object) {
+    return JSON.parse(JSON.stringify(object));
+}
+
+async function updateWorkers(useCached = false) {
+    let workers;
+    if (useCached) {
+
+        workers = deepClone(cachedWorkers);
+    } else {
+        const response = await fetch("https://stablehorde.net/api/v2/workers");
+        if (!response.ok) return;
+        workers = await response.json();
+    }
+
+    cachedWorkers = deepClone(workers);
     
+    if (options.sortWorkers == "time") {
+        workers.sort((a, b) => b.uptime - a.uptime);
+    } else if (options.sortWorkers == "kudos") {
+        workers.sort((a, b) => b.kudos_rewards - a.kudos_rewards);
+    } else if (options.sortWorkers == "reqfilled") {
+        workers.sort((a, b) => b.requests_fulfilled - a.requests_fulfilled);
+    } else if (options.sortWorkers == "totalmps") {
+        workers.sort((a, b) => b.megapixelsteps_generated - a.megapixelsteps_generated);
+    } else if (options.sortWorkers == "maxsize") {
+        workers.sort((a, b) => b.max_pixels - a.max_pixels);
+    }
+
     content.innerHTML = "";
     for (let j = 0; j < workers.length; j++) {
         const worker = workers[j];
@@ -126,7 +166,7 @@ async function updateWorkers() {
             <div style="font-size:20px;font-weight:800">${worker.name} - ${secondsToDhm(worker.uptime)}</div>
             <div style="font-size:12px; margin-bottom: 10px">ID: ${worker.id}</div>
             <div>Max Size: ${max_size}x${max_size}</div>
-            <div>Requests Fufilled: ${worker.requests_fulfilled}</div>
+            <div>Requests Fulfilled: ${worker.requests_fulfilled}</div>
             <div>MPS Generated: ${worker.megapixelsteps_generated} - ${worker.performance.split(" ")[0]} MPS/s</div>
             <div>Kudos Gained: ${worker.kudos_rewards}</div>
             <ul style="margin: 0"><li>From Generating: ${worker.kudos_details.generated}</li><li>From Uptime: ${worker.kudos_details.uptime}</li></ul><br>
@@ -145,11 +185,11 @@ function closeOptions() {
     document.querySelector("#options").style.display = "none";
 }
 
-document.getElementById("lightmode").addEventListener("change", () => {
-    lightMode = document.getElementById("lightmode").checked;
-    localStorage.setItem("lightMode", lightMode);
+lightModeOption.addEventListener("change", () => {
+    options.lightMode = lightModeOption.checked;
+    localStorage.setItem("lightMode", options.lightMode);
     
-    if (lightMode) {
+    if (options.lightMode) {
         document.querySelector("link[href='./dark.css']").href = './light.css';
         document.querySelector(".close-modal>svg>path").setAttribute("fill", "rgb(111, 111, 111)");
         return;
@@ -158,15 +198,22 @@ document.getElementById("lightmode").addEventListener("change", () => {
     document.querySelector(".close-modal>svg>path").setAttribute("fill", "#909090");
 })
 
-document.getElementById("leaderboardOption").addEventListener("change", () => {
-    leaderboardEnabled = document.getElementById("leaderboardOption").checked;
-    localStorage.setItem("leaderboardEnabled", leaderboardEnabled);
+leaderboardOption.addEventListener("change", () => {
+    options.leaderboardEnabled = leaderboardOption.checked;
+    localStorage.setItem("leaderboardEnabled", options.leaderboardEnabled);
     
-    if (leaderboardEnabled) {
-        document.querySelector("#leaderboard").style.display = "table";
+    if (options.leaderboardEnabled) {
+        leaderboard.style.display = "table";
         return;
     }
-    document.querySelector("#leaderboard").style.display = "none";
+    leaderboard.style.display = "none";
+})
+
+sortWorkersOption.addEventListener("change", () => {
+    options.sortWorkers = sortWorkersOption.value;
+    localStorage.setItem("sortWorkers", options.sortWorkers);
+
+    updateWorkers(true);
 })
 
 function moveLeaderboard() {
