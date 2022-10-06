@@ -134,7 +134,6 @@ function deepClone(object) {
 async function updateWorkers(useCached = false) {
     let workers;
     if (useCached) {
-
         workers = deepClone(cachedWorkers);
     } else {
         const response = await fetch("https://stablehorde.net/api/v2/workers");
@@ -236,4 +235,4 @@ updateWorkers();
 updateLeaderboard();
 setInterval(updateWorkers, 1000 * 5);
 setInterval(updateSidebarInfo, 1000 * 5);
-setInterval(updateLeaderboard, 1000 * 30);
+setInterval(updateLeaderboard, 1000 * 60);
